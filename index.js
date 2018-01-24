@@ -1,5 +1,8 @@
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.json())
 
 let contacts = [
     {
@@ -48,6 +51,13 @@ app.delete('/api/persons/:id', (request, response) => {
     contacts = contacts.filter(contact => contact.id !== id)
   
     response.status(204).end()
+})
+
+app.post('/api/persons', (request, response) => {
+  const contact = request.body
+  contact.id = Math.floor((Math.random() * 10000) + 1);
+  contacts = contacts.concat(contact)
+  response.json(contact)
 })
 
 const PORT = 3001
