@@ -1,8 +1,10 @@
 const express = require('express')
+var morgan  = require('morgan')
 const app = express()
 const bodyParser = require('body-parser')
 
 app.use(bodyParser.json())
+app.use(morgan('tiny'))
 
 let contacts = [
     {
