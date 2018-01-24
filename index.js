@@ -1,11 +1,13 @@
 const express = require('express')
 var morgan  = require('morgan')
+const cors = require('cors')
 const app = express()
 const bodyParser = require('body-parser')
 
 morgan.token('type', function (req, res) { return JSON.stringify(req.body) })
 app.use(bodyParser.json())
 app.use(morgan(':method :url :type :status :res[content-length] - :response-time ms'))
+app.use(cors())
 
 let contacts = [
     {
@@ -76,6 +78,19 @@ app.post('/api/persons', (request, response) => {
 
   contacts = contacts.concat(contact)
   response.json(contact)
+})
+
+app.put('/api/persons/:id', (request, response) => {
+  const id = Number(request.params.id)
+  const contact = contacts.find(contact => contact.id === id)
+  if ( contact ) {
+    contacts = contacts.filter(contact => contact.id !== id)
+    contact.number = request.body.number
+    contacts = contacts.concat(contact)
+    response.json(contact)
+  } else {
+    response.status(404).end()
+  }
 })
 
 const PORT = 3001
