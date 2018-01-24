@@ -24,6 +24,10 @@ let contacts = [
     }
 ]
 
+app.get('/info', (request, response) => {
+    response.send('<p> Puhelinluettelossa '+contacts.length+' henkilön tiedot</p><p>'+new Date(Date.now())+'</p>')
+  })
+
 app.get('/api/persons', (request, response) => {
     response.json(contacts)
 })
