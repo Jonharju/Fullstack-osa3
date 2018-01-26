@@ -1,6 +1,7 @@
 const express = require('express')
 var morgan  = require('morgan')
 const cors = require('cors')
+const Contact = require('./models/contact')
 const app = express()
 const bodyParser = require('body-parser')
 
@@ -38,7 +39,12 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-    response.json(contacts)
+    //response.json(contacts)
+    Contact
+    .find({})
+    .then(contact => {
+      response.json(contact)
+    })
 })
 
 app.get('/api/persons/:id', (request, response) => {
