@@ -42,8 +42,8 @@ app.get('/api/persons', (request, response) => {
     //response.json(contacts)
     Contact
     .find({})
-    .then(contact => {
-      response.json(contact)
+    .then(contacts => {
+      response.json(contacts.map(Contact.format))
     })
 })
 
