@@ -89,26 +89,34 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
-  const name = contacts.find(contact => contact.name === body.name)
+  //const name = contacts.find(contact => contact.name === body.name)
   
   if(body.name === undefined){
     return response.status(400).json({error: 'name missing'})
   } else if(body.number === undefined){
     return response.status(400).json({error: 'number missing'})
-  } else if(name){
-    return response.status(400).json({error: 'name must be unique'})
-  }
-
+  }// else if(name){
+    //return response.status(400).json({error: 'name must be unique'})
+  //}
+    
   const contact = new Contact({
     name: body.name,
     number: body.number
   })
-
-  contact
-    .save()
-    .then(savedContact => {
-      response.json(Contact.format(savedContact))
+  Contact
+    .find({name: body.name})
+    .then(c => {
+      if(c.length >0){
+        response.status(400).json({error: 'name must be unique'})
+      } else {
+        contact
+          .save()
+          .then(savedContact => {
+            response.json(Contact.format(savedContact))
+          })
+      }
     })
+  
   //contacts = contacts.concat(contact)
   //response.json(contact)
 })
