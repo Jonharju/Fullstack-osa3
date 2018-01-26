@@ -35,7 +35,11 @@ let contacts = [
 ]
 
 app.get('/info', (request, response) => {
-    response.send('<p> Puhelinluettelossa '+contacts.length+' henkilön tiedot</p><p>'+new Date(Date.now())+'</p>')
+  Contact
+    .find({})
+    .then(contacts => {
+      response.send('<p> Puhelinluettelossa '+contacts.length+' henkilön tiedot</p><p>'+new Date(Date.now())+'</p>')
+    })
 })
 
 app.get('/api/persons', (request, response) => {
@@ -48,14 +52,26 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const contact = contacts.find(contact => contact.id === id)
-  
-    if ( contact ) {
-      response.json(contact)
-    } else {
-      response.status(404).end()
-    }
+    //const id = Number(request.params.id)
+    //const contact = contacts.find(contact => contact.id === id)
+    //if ( contact ) {
+    //  response.json(contact)
+    //} else {
+    //  response.status(404).end()
+    //}
+    Contact
+      .findById(request.params.id)
+      .then(contact => {
+        if (contact) {
+          response.json(Contact.format(contact))
+        } else {
+          response.status(404).end()
+        }
+      })
+      .catch(error => {
+        console.log(error)
+        response.status(404).end()
+      })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
