@@ -98,16 +98,31 @@ app.post('/api/persons', (request, response) => {
 })
 
 app.put('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const contact = contacts.find(contact => contact.id === id)
-  if ( contact ) {
-    contacts = contacts.filter(contact => contact.id !== id)
-    contact.number = request.body.number
-    contacts = contacts.concat(contact)
-    response.json(contact)
-  } else {
-    response.status(404).end()
+  //const id = Number(request.params.id)
+  //const contact = contacts.find(contact => contact.id === id)
+  //if ( contact ) {
+  //  contacts = contacts.filter(contact => contact.id !== id)
+  //  contact.number = request.body.number
+  //  contacts = contacts.concat(contact)
+  //  response.json(contact)
+  //} else {
+  //  response.status(404).end()
+  //}
+  const body = request.body
+
+  const contact = {
+    name: body.name,
+    number: body.number
   }
+  Contact
+    .findByIdAndUpdate(request.params.id, contact, { new: true } )
+    .then(updatedContact => {
+      response.json(Contact.format(updatedContact))
+    })
+    .catch(error => {
+      console.log(error)
+      response.status(400).send({ error: 'malformatted id' })
+    })
 })
 
 const PORT = process.env.PORT || 3001
