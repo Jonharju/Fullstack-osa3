@@ -59,10 +59,16 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    contacts = contacts.filter(contact => contact.id !== id)
-  
-    response.status(204).end()
+    //const id = Number(request.params.id)
+    //contacts = contacts.filter(contact => contact.id !== id)
+    Contact
+    .findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => {
+      response.status(400).send({ error: 'malformatted id' })
+    })
 })
 
 app.post('/api/persons', (request, response) => {
